@@ -24,6 +24,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
+import org.json.*;
 
 /**
  *
@@ -33,7 +34,14 @@ import javax.net.ssl.HttpsURLConnection;
 public class AddressSearch implements AddressSearchInterface {
     private String postcode;
     private String huisnummer;
-    private String adres;
+    private String straat;
+    private String woonplaats;
+    private boolean found;
+    
+    @Override
+    public boolean getFound(){
+        return this.found;
+    }
     
     @Override
     public void setPostcode (String postcode){
@@ -57,37 +65,81 @@ public class AddressSearch implements AddressSearchInterface {
     
     @Override
     public void zoekAdres(){
-        this.adres= geefAdres(this.postcode,this.huisnummer);
-    }
-    
-    @Override
-    public String getAdres(){
-        return this.adres;
-    }
-    
-    private String geefAdres (String postcode, String huisnummer){
-        // hier de zoekfunctie echt implementeren
+       // hier de zoekfunctie echt implementeren
+        this.found= true;
         String json = "";
-        String adres = "";
+        //String adres = "";
         String url = maakURL (postcode, huisnummer);
         try {
             json = geefJSON (url);
         }
         catch (Exception e){
             e.printStackTrace();
+           
         }
         
-        adres = vanJSONnaarAdres(json);
         
-        return adres;
+        this.straat = vanJSONnaarStraat(json);
+        this.woonplaats = vanJSONnaarWoonplaats(json);
         
         
-
+        
+        
     }
     
-    private String vanJSONnaarAdres (String json){
-        return ("json = "+json);
+    
+    
+    @Override
+    public String getStraat(){
+        return this.straat;
     }
+    
+    @Override
+    public String getWoonplaats(){
+        return this.woonplaats;
+    }
+    
+    
+    
+    
+    
+     private String vanJSONnaarStraat (String json){
+        //String str = "{ \"name\": \"Alice\", \"age\": 20 }";
+        //JSONObject obj = new JSONObject(str);
+       // String n = obj.getString("name");
+        //int a = obj.getInt("age");
+        //System.out.println(n + " " + a); 
+        String straat = "";
+        try {
+            JSONObject obj = new JSONObject(json);
+            straat = obj.getString("street");
+        }
+        catch (Exception e){
+            //e.printStackTrace();
+            this.found=false;
+        }
+        return straat;
+    }
+     
+      private String vanJSONnaarWoonplaats (String json){
+        //String str = "{ \"name\": \"Alice\", \"age\": 20 }";
+        //JSONObject obj = new JSONObject(str);
+        //String n = obj.getString("name");
+        //int a = obj.getInt("age");
+        //System.out.println(n + " " + a);   
+        String woonplaats = "";
+        try {
+            JSONObject obj = new JSONObject(json);
+            woonplaats = obj.getString("city");
+        }
+        catch (Exception e){
+            //e.printStackTrace();
+            this.found=false;
+        }
+        return woonplaats;
+    }
+    
+    
     
     private String geefJSON (String url) throws Exception {
         String json;

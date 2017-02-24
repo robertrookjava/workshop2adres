@@ -22,6 +22,8 @@ import org.springframework.context.annotation.ComponentScan;
  * @author robertrook
  */
 public interface AddressSearchInterface {
+    boolean getFound();
+    
     void setPostcode (String postcode);
     
     String getPostcode();
@@ -32,6 +34,10 @@ public interface AddressSearchInterface {
     
     void zoekAdres();
     
-    String getAdres();
+    
+    
+    String getStraat();
+    
+    String getWoonplaats();
 
 }

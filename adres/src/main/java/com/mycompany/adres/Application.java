@@ -41,7 +41,8 @@ public class Application {
    
         String postcode;
         String huisnummer;
-        String adres;
+        String straat;
+        String woonplaats;
         
         AnnotationConfigApplicationContext context = 
         new AnnotationConfigApplicationContext();
@@ -66,9 +67,19 @@ public class Application {
         adressSearchInterface.setPostcode(postcode);
         adressSearchInterface.setHuisnummer(huisnummer);
         adressSearchInterface.zoekAdres();
-        adres = adressSearchInterface.getAdres();
+      
+        straat = adressSearchInterface.getStraat();
+        woonplaats = adressSearchInterface.getWoonplaats();
         
-        System.out.println("Het adres is "+ adres);
+        
+        if (adressSearchInterface.getFound()){
+            System.out.println("Straat "+ straat);
+            System.out.println("Woonplaats "+ woonplaats);   
+        }
+        else {
+            System.out.println("Het adres is onbekend");
+        }
+        
         
         
         
