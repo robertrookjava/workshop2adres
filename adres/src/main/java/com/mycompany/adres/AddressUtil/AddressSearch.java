@@ -68,6 +68,7 @@ public class AddressSearch implements AddressSearchInterface {
     private String geefAdres (String postcode, String huisnummer){
         // hier de zoekfunctie echt implementeren
         String json = "";
+        String adres = "";
         String url = maakURL (postcode, huisnummer);
         try {
             json = geefJSON (url);
@@ -76,10 +77,16 @@ public class AddressSearch implements AddressSearchInterface {
             e.printStackTrace();
         }
         
-        return json;
+        adres = vanJSONnaarAdres(json);
+        
+        return adres;
         
         
 
+    }
+    
+    private String vanJSONnaarAdres (String json){
+        return ("json = "+json);
     }
     
     private String geefJSON (String url) throws Exception {
@@ -119,8 +126,8 @@ public class AddressSearch implements AddressSearchInterface {
     
     private String maakURL (String postcode, String huisnummer){
         String s = "http://rsas.rsvier.nl/uglyduck/postcodeData/?postcode=PPPP&huisnummer=HHHH&useKey=mt9c4wv7a13kydzq82be";
-        String url = s.replaceFirst("PPPP", postcode);
-        url = url.replaceFirst("HHHH", huisnummer);
+        String url = s.replaceFirst("PPPP", postcode.replaceAll("\\s+",""));
+        url = url.replaceFirst("HHHH", huisnummer.replaceAll("\\s+",""));
         return url;
 
     }
